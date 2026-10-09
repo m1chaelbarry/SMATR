@@ -1,0 +1,44 @@
+---
+title: "Realizacja NAND i kości UCY"
+part: ttl
+order: 10
+goal: "Przejdziesz od uproszczonej funkcji do bramek i prawidłowych wyprowadzeń."
+sources: ["2smatr.pdf, s. 5–8, rys. 5–8"]
+tasks: [T03, T04]
+simulator: gates
+---
+## Co jest dostępne na stanowisku
+
+Tablica ma cztery kolumny po trzy podstawki. Trzy pierwsze służą NAND, ostatnia NOR tworzącym SR. Zasilanie i masa podstawek są połączone. Kości mają obudowy 14-nóżkowe; topografii różnych kości nie wolno utożsamiać.
+
+| Kość | Bramki | Wejścia → wyjście |
+|---|---|---|
+| UCY7400 | 4 × NAND2 | 1,2→3; 4,5→6; 9,10→8; 12,13→11 |
+| UCY7410 | 3 × NAND3 | 1,2,13→12; 3,4,5→6; 9,10,11→8 |
+| UCY7420 | 2 × NAND4 | 1,2,4,5→6; 9,10,12,13→8 |
+| UCY7402 | 4 × NOR2 | 2,3→1; 5,6→4; 8,9→10; 11,12→13 |
+
+Dla tych kości VCC jest na 14, masa na 7. Nieużywane wejście NAND jest logicznie neutralne przy 1; w projekcie treningowym można połączyć je z użytym wejściem, jeśli chcemy uzyskać negację. Nie projektujemy działania na nieokreślonych, „wiszących” wejściach.
+
+## Cztery NAND realizują funkcję z instrukcji
+
+$$n_a=NAND(a,a),\quad u=NAND(n_a,b),\quad v=NAND(a,c),\quad y=NAND(u,v).$$
+
+$u$ jest negacją pierwszego iloczynu, $v$ negacją drugiego. Ostatnie NAND neguje ich AND; de Morgan daje sumę obu dodatnich iloczynów. Negacja przez wspólne wejścia nie wymaga osobnej kości NOT.
+
+| Bramka jednej UCY7400 | Połączenia |
+|---|---|
+| A | a do 1 i 2; n_a z 3 |
+| B | 3 do 4; b do 5; u z 6 |
+| C | a do 9; c do 10; v z 8 |
+| D | 6 do 12; 8 do 13; y z 11 |
+
+To kompletna lista sieci tej funkcji przy zasilanej podstawce. Wynik można kierować na wejście kolejnego układu lub odpowiedni przetwornik stanowiska, zgodnie z projektem.
+
+## Przykład krok po kroku
+
+Przy 1,0,1 negacja a daje 0. Bramka B dostaje 0,0 i daje 1. C dostaje 1,1 i daje 0. D dostaje 1,0 i daje 1. Powtórzenie dla wszystkich ośmiu kombinacji pokazuje wyniki 0,0,1,1,0,1,0,1.
+
+## Typowy błąd i powtórka
+
+Układ NAND–NAND realizuje sumę iloczynów. Wstawienie AND zamiast końcowego NAND odwróci wynik. Zawsze opisuj sygnały pośrednie, a po przypisaniu bramek sprawdź numery nóżek i liczbę wolnych bramek.

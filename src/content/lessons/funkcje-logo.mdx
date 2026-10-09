@@ -1,0 +1,48 @@
+---
+title: "GF, osiem SF i przebiegi czasowe"
+part: logo
+order: 14
+goal: "Dobierzesz pamięć, opóźnienie i licznik według ich rzeczywistego zachowania."
+sources: ["3smatr.pdf, s. 9–10", "Siemens LOGO! Manual 1997, rozdz. 3.9.5–3.9.12"]
+tasks: [L03, L04]
+---
+## Funkcje podstawowe
+
+GF obejmuje AND, OR, NOT, XOR, NAND i NOR. W tabeli AND/OR/NAND/NOR mają trzy wejścia, XOR dwa, NOT jedno. Bramki nie zapamiętują stanu. Przykład $AND(I1,I2,hi)$ realizuje zwykłe AND dwóch sygnałów; OR z dodatkowym lo działa analogicznie.
+
+## Pełny zestaw funkcji specjalnych
+
+| SF | Co uruchamia | Co kończy lub resetuje |
+|---|---|---|
+| Opóźnione załączenie TON | Trg=1 rozpoczyna czas T | Trg=0 zeruje czas i Q |
+| Opóźnione wyłączenie TOF | Trg załącza Q; zanik Trg rozpoczyna T | Koniec T lub R=1 |
+| Przerzutnik impulsowy | Zbocze narastające Trg przełącza Q | R=1 zeruje, ma priorytet |
+| Przełącznik czasowy | Okna zegara No1–No3 | Koniec zaplanowanego okna |
+| Przerzutnik RS | S=1 ustawia Q | R=1 zeruje, także przy S=R=1 |
+| Generator impulsowy | En=1 uruchamia naprzemienne odcinki T | En=0 wyłącza generator |
+| Załączenie z pamięcią | Zbocze Trg uruchamia czas, zanik Trg go nie kasuje | R=1 zeruje czas i Q |
+| Licznik dwukierunkowy | Zbocze Cnt zwiększa lub zmniejsza wartość według Dir | R=1 zeruje; Q wynika z progu Par |
+
+Tabela źródłowa jest na **dwóch stronach**. W dwóch ostatnich wierszach zamieniono symbole: R,Cnt,Dir,Par należy do licznika, Trg,R,T do załączenia z pamięcią. Schemat stykowy i przebieg czasowy w siódmym wierszu potwierdzają pamięć. Korektę rozstrzyga dawna dokumentacja producenta, a nie funkcje nowszych modeli.
+
+## Trzy różne pamięci
+
+RS ma charakter „ustaw aż do resetu”. Impulsowy zmienia 0→1→0 na kolejnych zboczach. Załączenie z pamięcią zapamiętuje rozpoczęcie odmierzania i ustawia Q dopiero po czasie. Słowo „pamięć” nie czyni ich zamiennymi.
+
+## Przykłady czasowe
+
+TON T=2 s: impuls 1 s nie załącza Q, następny zaczyna czas od nowa. TOF T=2 s: po opadaniu Trg wyjście jest 1 przez kolejne 2 s; R przerywa ten czas. W generatorze T=1 s cykl obejmuje 1 s załączenia i 1 s wyłączenia. Załączenie z pamięcią po impulsie 0,2 s i T=2 s ustawi Q po 2 s od początku impulsu, dopóki R nie zostanie podane.
+
+Licznik z Par=3 i Dir=0 daje Q=0 po pierwszym i drugim zboczu, Q=1 po trzecim. Wysoki Cnt trwający 5 s daje jedno zbocze, nie pięć zliczeń. Dir=1 zmienia kierunek liczenia, nie zeruje licznika.
+
+## Nastawy i zegar
+
+Czas T ma jednostkę wskazaną na panelu; zapis B01:T oznacza parametr, Ta czas aktualny. Dla starych funkcji czasowych dokumentacja zaleca T≥0,10 s. Nie utożsamiaj jednostki nastawy z umownym krokiem przeglądarkowej animacji. Znak + udostępnia nastawę podczas parametryzacji, znak − chroni ją przed zmianą w RUN.
+
+Przełącznik czasowy korzysta z dnia tygodnia i czasu rzeczywistego: No1–No3 są trzema krzywkami z polami Day, On, Off. Przykład No1: pn–pt, On=08:00, Off=13:00 daje pracę w dni robocze przez pięć godzin. Krzywki opisują zdarzenia włączenia i wyłączenia. Nie zakładaj bez sprawdzenia, że nakładające się okna są zwykłym OR ich poziomów; godzina Off może zmienić wyjście w trakcie innego okna. Dzień i godzinę ustalasz przez Set Clock.
+
+W liczniku standardowego LOGO Par jest całkowite 0–9999. Q odpowiada wartości większej lub równej progowi, R ma priorytet nad zboczem Cnt. Nie dodajemy wejść szybkiego licznika, większych zakresów ani remanencji modeli LOGO…L. Dla opisanego urządzenia producent podaje maksymalną częstotliwość zliczania na zaciskach 5 Hz. Prowadzone impulsy w symulatorze są rozdzielone przerwami.
+
+## Typowy błąd i powtórka
+
+Nie traktuj Trg jako uniwersalnego „ustaw Q”. Zawsze sprawdź: poziom czy zbocze, potrzebny czas, wpływ zaniku sygnału i priorytet R. Wspólny cykl korzysta z RS oraz liczników, a nie z przełączania faz czasem umownej animacji.

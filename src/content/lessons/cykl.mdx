@@ -1,0 +1,42 @@
+---
+title: "Cykl, fazy i pamięć"
+part: podstawa
+order: 2
+goal: "Odczytasz cyklogram i rozpiszesz stany, wyjścia oraz warunki przejść."
+sources: ["1smatr.pdf, s. 11–13", "2smatr.pdf, s. 2, 7, 9", "3smatr.pdf, s. 4, 20"]
+tasks: [P03, P04]
+simulator: cycle
+---
+## Od rysunku do tabeli
+
+W cyklogramie linia ciągła ze strzałką oznacza ruch roboczy, przerywana ruch szybki. Zwrot strzałki oznacza kierunek ruchu. Osobne znaki wskazują start, koniec, zmianę fazy oraz postój przez czas nastawiony w przekaźniku czasowym. Przed projektowaniem odczytaj legendę: liczba przy odcinku jest odległością, a nie czasem.
+
+Przykład z 1smatr.pdf, s. 12 obejmuje trzy przejazdy w lewo 100–120–100 mm i szybki powrót. Przyjmujemy $x=0$ na początku i dodatni kierunek w prawo.
+
+| Stan | Zakres x [mm] | Kierunek | Sprzęgło | Koniec |
+|---|---|---|---|---|
+| Oczekiwanie | 0 | Brak | Brak | Dopuszczony START |
+| F1 | 0 do −100 | Lewy | 1E | 2ŁD |
+| F2 | −100 do −220 | Lewy | 2E | 3ŁD |
+| F3 | −220 do −320 | Lewy | 1E | 4ŁD |
+| F4 | −320 do 0 | Prawy | 2E | 1ŁD |
+
+W tabeli fazy są nazwami pomocniczymi, nie nazwami aparatów z instrukcji. Instrukcyjny schemat wykorzystuje zależności między stycznikami; własny wariant treningowy przechowuje fazy jawnie.
+
+## Dlaczego pamięć jest konieczna
+
+Po zwolnieniu START polecenie znika, ale ruch ma trwać. Po przejechaniu zderzaka także łącznik może wrócić do stanu spoczynkowego. Układ potrzebuje zapamiętać, że rozpoczęto fazę.
+
+F1 i F3 mają ten sam kierunek i sprzęgło. Rozróżnia je **historia cyklu**. Układ w F1 reaguje na 2ŁD, w F3 na 4ŁD. Sygnał 2ŁD podczas F4 nie powinien uruchamiać F2. Warunek przejścia musi zawierać stan poprzedni: „F1 i 2ŁD”, nie samo „2ŁD”.
+
+## Przykład przejścia
+
+Przed zadziałaniem 3ŁD trwa F2. Sygnał 3ŁD wpisuje F3. F3 pozostaje zapamiętana po zwolnieniu 3ŁD, a F2 zostaje skasowana. Nowe polecenie wyłącza 2E i wybiera 1E. Silnik dalej obraca się w lewym kierunku. Najpierw opisujesz tę przyczynę w tabeli, dopiero potem wybierasz styki, NAND lub bloki.
+
+## Typowy błąd
+
+Równanie „szybki posuw = 2ŁD” uruchomiłoby sprzęgło ponownie przy powrocie i zgubiłoby pamięć po zwolnieniu czujnika. Sygnały położenia inicjują przejścia, a fazy określają wyjścia.
+
+## Krótka powtórka
+
+Cykl to uporządkowana sekwencja. Faza ma wyjścia, warunek rozpoczęcia i warunek zakończenia. Pamięć pozwala przetrwać zanik krótkich sygnałów oraz odróżnić podobne fragmenty ruchu.

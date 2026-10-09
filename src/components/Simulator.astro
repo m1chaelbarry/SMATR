@@ -1,0 +1,15 @@
+---
+import Cycle from './sim/Cycle';
+import Bumpers from './sim/Bumpers';
+import Relays from './sim/Relays';
+import Gates from './sim/Gates';
+import Memory from './sim/Memory';
+import Logo from './sim/Logo';
+const {kind}=Astro.props;
+---
+{kind==='cycle'&&<Cycle client:visible/>}
+{kind==='bumpers'&&<Bumpers client:visible/>}
+{kind==='relays'&&<Relays client:visible/>}
+{kind==='gates'&&<Gates client:visible/>}
+{kind==='memory'&&<Memory client:visible/>}
+{kind==='logo'&&<Logo client:visible/>}

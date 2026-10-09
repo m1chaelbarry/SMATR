@@ -1,0 +1,18 @@
+---
+import {getCollection,render} from 'astro:content';
+import Book from '../../layouts/Book.astro';
+import Tasks from '../../components/Tasks.astro';
+import Simulator from '../../components/Simulator.astro';
+import {parts,url} from '../../lib/links';
+export async function getStaticPaths(){return (await getCollection('lessons')).map(lesson=>({params:{part:lesson.data.part,slug:lesson.id},props:{lesson}}));}
+const {lesson}=Astro.props;
+const {Content}=await render(lesson);
+const part=parts.find(p=>p.id===lesson.data.part)!;
+const all=(await getCollection('lessons')).sort((a,b)=>a.data.order-b.data.order);
+const at=all.findIndex(l=>l.id===lesson.id);const prev=all[at-1];const next=all[at+1];
+---
+<Book title={lesson.data.title} active={part.id} description={lesson.data.goal}>
+<header class="lesson-header"><a class="eyebrow" href={url(`${part.id}/`)}>{part.label} · lekcja {at%4+1}</a><h1>{lesson.data.title}</h1><div class="goal"><strong>Po tej lekcji potrafisz:</strong> {lesson.data.goal}</div></header>
+<article class="prose"><Content/>{lesson.data.simulator&&<div id="symulator"><Simulator kind={lesson.data.simulator}/></div>}<h2>Sprawdź siebie</h2><Tasks ids={lesson.data.tasks}/><p class="source-line"><strong>Źródła:</strong> {lesson.data.sources.join('; ')}. <a href={url('zrodla/')}>Zasady i korekty</a></p></article>
+<nav class="lesson-footer" aria-label="Kolejność lekcji">{prev?<a href={url(`${prev.data.part}/${prev.id}/`)}>Poprzednia: {prev.data.title}</a>:<span/>}{next&&<a href={url(`${next.data.part}/${next.id}/`)}>Następna: {next.data.title}</a>}</nav>
+</Book>

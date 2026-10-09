@@ -1,0 +1,41 @@
+---
+title: "Programowanie i obsługa panelu"
+part: logo
+order: 15
+goal: "Wpiszesz program od Q1, poprawisz połączenie i zmienisz parametr."
+sources: ["3smatr.pdf, s. 11–19"]
+tasks: [L05, L06]
+simulator: logo
+---
+## Wejście do programowania
+
+Jednocześnie lewo+prawo+OK otwiera tryb programowania. Sześć klawiszy to cztery kierunki, OK i ESC. Podkreślony kursor oznacza przemieszczanie po schemacie; prostokątny wybór służy zmianie elementu. OK rozpoczyna i zatwierdza wybór, ESC cofa krok.
+
+Menu główne zawiera Program, PC/Card, Start. Program otwiera Edit Prg, Clear Prg, Set Clock. Wpisujesz program **od wyjścia do wejść**: wybierz Q1, potem GF OR, następnie wejścia tego bloku. Wyniki innych bloków wybierasz przez BN. Nie zaczynasz od tworzenia samotnego NOT przy I1.
+
+## Prowadzony przykład
+
+1. Q1 otrzymuje nowy OR B01.
+2. Pierwsze wejście B01 otrzymuje AND B02.
+3. Pierwsze wejście B02 otrzymuje NOT B03 z I1; drugie I2; trzecie hi.
+4. Drugie wejście B01 otrzymuje AND B04 z I1,I3,hi.
+5. Trzecie wejście B01 otrzymuje lo.
+6. ESC wraca do menu, Start i OK przełączają LOGO do RUN.
+
+Jeżeli przy połączeniu pozostaje ?, program nie jest kompletny. ESC wskaże problem zamiast pozwolić uruchomić program. x jest świadomym wyborem z Co, ? nie.
+
+## Wstawianie, usuwanie i poprawki
+
+Aby usunąć tylko blok przy Q1, wybierz BN i numer bloku, który ma go zastąpić w połączeniu. Aby skasować gałąź, wybierz x — skutkiem jest usunięcie połączonych bloków tej gałęzi. Nowy blok wstawiony przy wyjściu otrzymuje następny numer, a dotychczasowy blok przechodzi na jego najwyższe wejście. Pozostałe wejścia nadal musisz określić.
+
+Poprawianie gotowego programu wymaga powrotu do Edit Prg, ustawienia kursora i wyboru nowego zacisku lub bloku. Clear Prg usuwa cały program po wyborze Yes. Przegląd programu wykorzystuje lewo/prawo.
+
+## Parametry i archiwizacja
+
+ESC+OK otwiera parametryzację w RUN. Set Param pozwala wybrać blok, pole i nastawę; zapis B01:T wskazuje czas bloku B01, Ta czas aktualny. Set Clock służy ustawieniu dnia i godziny. Parametryzacja nie jest trybem edycji połączeń.
+
+PC/Card obejmuje PC↔LOGO, LOGO→Card i Card→LOGO. Moduł w gnieździe frontowym kopiuje i archiwizuje program. Kabel PC zajmuje to samo gniazdo. Podczas połączenia z PC wybierz odpowiedni tryb, a ESC kończy połączenie. Trening nie wykonuje transferu do urządzenia ani na kartę.
+
+## Typowy błąd i powtórka
+
+Start w menu nie zastępuje START operatora. RUN może wykonywać program z zerowymi wyjściami. Prowadzony panel ćwiczy opisane czynności i wybrane poprawki na gotowych programach, nie jest pełnym emulatorem firmware.

@@ -1,0 +1,61 @@
+---
+title: "Pełny cykl przekaźnikowy"
+part: przekazniki
+order: 8
+goal: "Prześledzisz przykład źródłowy i wyprowadzisz własny układ z pamięcią faz."
+sources: ["1smatr.pdf, s. 12–13 — schemat źródłowy", "Wariant fazowy: własny przykład treningowy"]
+tasks: [R07, R08]
+---
+import CycleDiagram from '../../components/CycleDiagram.astro';
+import RelayWiring from '../../components/RelayWiring.astro';
+
+## Przykład źródłowy, nie jego zamiennik
+
+Na s. 12–13: 1S steruje lewym kierunkiem, 2S prawym, 3S sprzęgłem roboczym 1E, 4S szybkim 2E. 1ŁD potwierdza pozycję początkową. 2ŁD wywołuje ruch szybki w lewo, 3ŁD powrót do ruchu roboczego, 4ŁD zmianę kierunku i szybki powrót. Styki podtrzymujące przechowują polecenia mimo zwolnienia czujników, a styki przeciwnego stycznika zapewniają blokady.
+
+Czytanie rysunku zaczynasz od poziomów 11–21. Poziom 11 zawiera sygnalizację pozycji początkowej. Obwód 3S zawiera STOP, warunek startu i podtrzymanie. Obwód 1S zawiera styki 4ŁD, 3S, własne podtrzymanie, blokadę 2S i zabezpieczenie PT. Obwód 2S wykorzystuje sygnał 4ŁD oraz podtrzymanie; 4S reaguje na 2ŁD, 3ŁD i powrót przez 2S.
+
+**STOP z rysunku nie jest wspólnym stykiem przed wszystkimi cewkami.** Znajduje się w obwodzie 3S. Nie wolno z samej etykiety STOP wyciągać wniosku, że każda faza zatrzyma wszystkie napędy tak jak wariant treningowy. To istotna cecha analizowanego schematu, odrębna od nadrzędnego awaryjnego STOP. Numerów jego przewodów nie przenosimy do nowego projektu.
+
+## Własny wariant: pięć przekaźników pamięci
+
+<CycleDiagram kind="relay" />
+
+K1–K4 pamiętają fazy F1–F4, K5 blokuje przytrzymany START. $B=K1+K2+K3+K4$ oznacza trwający cykl; $Z=STOP$ jest aktywnym poleceniem zakończenia. Poniższe wiersze stanowią pełny schemat sterowania w zapisie stykowym: przecinek oznacza szereg, nawias z „lub” gałęzie równoległe, **NO/NC wskazuje rodzaj styku**.
+
+| Cewka | Szereg przed gałęzią | Gałąź pobudzenia lub podtrzymania |
+|---|---|---|
+| K1 | NC Z, NC K2 | NO K1 **lub** (NO START, NO 1ŁD, NC B, NC K5) |
+| K2 | NC Z, NC K3 | NO K2 **lub** (NO K1, NO 2ŁD) |
+| K3 | NC Z, NC K4 | NO K3 **lub** (NO K2, NO 3ŁD) |
+| K4 | NC Z, NC 1ŁD | NO K4 **lub** (NO K3, NO 4ŁD) |
+| K5 | NO START | NO K5 **lub** (NO K1 lub NO K2 lub NO K3 lub NO K4 lub NO Z) |
+
+„NC B” jest skrótem czterech szeregowych NC K1–K4, nie dodatkowym przekaźnikiem. Wspólny obwód zezwolenia z awaryjnym STOP i zabezpieczeniem pozostaje przed obwodami ruchu. STOP operatora otwiera w tym własnym wariancie zezwolenie faz K1–K4. K5 pozostaje pobudzony przy przytrzymanym START i zwalnia po jego puszczeniu.
+
+## Dekodowanie na styczniki
+
+<CycleDiagram />
+
+| Cewka wykonawcza | Szeregowy obwód sterowania |
+|---|---|
+| 1S — lewo | (NO K1 lub K2 lub K3), NC K4, NC 2S, zezwolenie |
+| 2S — prawo | NO K4, NC 1S, zezwolenie |
+| 3S — 1E | (NO K1 lub K3), NC K2, NC K4, NC 4S, zezwolenie |
+| 4S — 2E | (NO K2 lub K4), NC 3S, zezwolenie |
+
+NC K4 nadaje powrotowi pierwszeństwo kierunku; NC K2 i K4 wykluczają robocze sprzęgło, gdy pamięć przejścia chwilowo obejmuje dwie sąsiednie fazy. Po uspokojeniu układu aktywna jest jedna faza. Nie jest to analiza czasów mechanicznych styczników.
+
+Obwód mocy silnika jest nawrotny: trzy bieguny 1S łączą fazy do U,V,W w kolejności podstawowej, trzy bieguny 2S zamieniają dwie fazy. Przed nimi jest wyłącznik i bezpieczniki, a PT chroni silnik. 24 V DC zasila osobne obwody 1E przez NO 3S oraz 2E przez NO 4S; oporniki bocznikujące są równoległe do cewek sprzęgieł zgodnie z instrukcją. To schemat funkcjonalny; dobór aparatury i numery rzeczywistych zacisków pochodzą ze stanowiska.
+
+## Montaż i prześledzenie
+
+Każdemu wspólnemu punktowi powyższych obwodów nadaj osobny numer sieci. Umieść cewki i wszystkie używane NO/NC w prostokątach K1–K5 oraz 1S–4S. Zaciski wspólnej sieci otrzymują wspólny numer. Cewki wymagają tylu fizycznych styków pomocniczych, ile razy wykorzystano je w tabeli; dostępność sprawdzasz przed montażem.
+
+<RelayWiring />
+
+START w domu pobudza K1; po puszczeniu START własny NO utrzymuje K1. 2ŁD pobudza K2, który przez NC K2 wyłącza K1. 3ŁD pobudza K3 i wyłącza K2. 4ŁD pobudza K4 i wyłącza K3. 1ŁD przerywa K4 i cykl kończy się. Na powrocie sygnały 3ŁD i 2ŁD nie wpisują wcześniejszych faz, bo K2 i K1 są już zerowe.
+
+## Typowy błąd i powtórka
+
+Samopodtrzymanie bez styku kasującego następnej fazy pozostawi kilka pamięci aktywnych. Pełny projekt wymaga warunków wpisania, podtrzymania, kasowania i dekodowania oraz niezależnej kontroli liczby dostępnych styków.

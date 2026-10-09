@@ -1,0 +1,6 @@
+---
+import { tasks } from '../data/tasks';
+const { ids = [], all = false, expanded = false } = Astro.props;
+const selected = all ? tasks : tasks.filter(t=>ids.includes(t.id));
+---
+{selected.map(t=><section class="exercise" id={t.id}><h3><span class="task-id">{t.id}</span>{t.title}</h3><p>{t.question}</p><details open={expanded}><summary>Podpowiedź</summary><p class="hint">{t.hint}</p></details><details class="solution" open={expanded}><summary>Rozwiązanie i uzasadnienie</summary><span class="print-answer">Rozwiązanie</span><div class="answer"><p>{t.answer}</p></div></details></section>)}

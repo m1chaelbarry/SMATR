@@ -1,0 +1,43 @@
+---
+title: "Geometria zderzaków"
+part: podstawa
+order: 3
+goal: "Obliczysz ustawienie zderzaków z uwzględnieniem rozstawu łączników."
+sources: ["1smatr.pdf, s. 8, rys. 7; s. 12"]
+tasks: [P05, P06]
+simulator: bumpers
+---
+## Trzy układy położeń
+
+Łącznik jest nieruchomy, zderzak znajduje się na ruchomym stole. Przyjmij $a_i$ jako położenie łącznika względem łoża, $z_i$ jako położenie zderzaka na stole, a $x_i$ jako przesunięcie stołu w chwili kontaktu. Wszystkie długości podaj w tej samej jednostce.
+
+Kontakt następuje, gdy:
+
+$$x_i+z_i=a_i,\qquad z_i=a_i-x_i.$$
+
+W rys. 7 kolejne łączniki mają rozstaw 55 mm. Przyjmujemy zgodnie z tym rysunkiem $a=(0,55,110,165)$ mm. Schemat kinematyczny ilustruje działanie napędu; do wymiarowania wykorzystujemy rysunek rozmieszczenia zderzaków.
+
+## Pełne obliczenie 100–120–100 mm
+
+Po pierwszym odcinku $x_2=-100$. Po drugim $x_3=-(100+120)=-220$. Po trzecim $x_4=-320$. Ruch w lewo daje ujemne współrzędne.
+
+| i | Łącznik a [mm] | Stół x [mm] | Zderzak z=a−x [mm] |
+|---|---|---|---|
+| 1 | 0 | 0 | 0 |
+| 2 | 55 | −100 | 155 |
+| 3 | 110 | −220 | 330 |
+| 4 | 165 | −320 | 485 |
+
+Odstępy wynoszą $155$, $330-155=175$ i $485-330=155$ mm. Są zgodne z przykładem instrukcji. Kontrola przez podstawienie: $-220+330=110$, więc trzeci zderzak spotyka trzeci łącznik dokładnie przy wymaganym przesunięciu.
+
+## Własny przykład treningowy
+
+Dla 80–140–60 mm położenia stołu to $0,-80,-220,-280$. Zderzaki wynoszą $0,135,330,445$, a odstępy $135,195,115$ mm. Te liczby wynikają z tej samej geometrii, nie z innego ustawienia łączników.
+
+## A jeśli stół jedzie w prawo?
+
+Zależność $z=a-x$ pozostaje prawdziwa. Zmienia się znak $x$. Dla pierwszego odcinka 100 mm w prawo i kolejnego łącznika przy 55 mm dostaniesz $z_2=55-100=-45$ mm. Ujemna współrzędna oznacza położenie po przeciwnej stronie przyjętego początku listwy. Nie oznacza automatycznie, że ustawienie mieści się w dostępnej fizycznej listwie. Zakres ustawienia należy sprawdzić na stanowisku; instrukcja nie podaje go liczbowo.
+
+## Typowy błąd i powtórka
+
+Odstępy 100–120–100 między zderzakami byłyby poprawne tylko dla czujników o tym samym położeniu. Tutaj czujniki są przesunięte. Zawsze najpierw zapisz współrzędne i sprawdź równanie kontaktu.

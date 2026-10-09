@@ -1,0 +1,38 @@
+---
+title: "Blokady i zabezpieczenia"
+part: przekazniki
+order: 6
+goal: "Rozpoznasz sprzeczne polecenia i zadania zabezpieczeń opisanych w instrukcji."
+sources: ["1smatr.pdf, s. 3–6, 12–13"]
+tasks: [R03, R04]
+---
+## Blokada przeciwnego stycznika
+
+Lewy i prawy kierunek silnika nie mogą działać jednocześnie. Do obwodu cewki lewego stycznika wstawia się NC prawego, a do prawego NC lewego. Pobudzenie jednego otwiera drogę zasilania drugiego. Analogicznie trzeba wykluczyć oba sprzęgła.
+
+Nie wystarczy stwierdzić, że tabela poprawnego cyklu nie zawiera konfliktu. Trzeba przeanalizować przejścia, błędne sygnały i polecenia operatora. Symulator idealnych styków pokazuje ustalone stany; nie odwzorowuje czasu ruchu zwory, łuku ani mechanicznych opóźnień.
+
+## Zabezpieczenia mają różne zadania
+
+| Element | Funkcja |
+|---|---|
+| Wyłącznik główny | Odłącza urządzenia i instalację od sieci |
+| Zabezpieczenie zanikowe | Zapobiega nieoczekiwanemu startowi po powrocie napięcia |
+| Bezpieczniki | Chronią przed skutkami zwarcia |
+| Przekaźnik cieplny | Chroni silnik przed przeciążeniem i przegrzaniem |
+| Opornik bocznikujący odbiornik indukcyjny DC | Ogranicza przepięcie przy wyłączaniu zgodnie z rozwiązaniem instrukcji |
+| Awaryjny STOP | Wyłącza wszystkie ruchy nadrzędnie wobec sterowania |
+
+W przekaźniku cieplnym prąd ogrzewa bimetale. Nadmierne odkształcenie otwiera styk w obwodzie sterowania. Ten mechanizm reaguje na skutek cieplny przeciążenia, nie zastępuje ochrony zwarciowej.
+
+## Zwykły i migowy łącznik drogowy
+
+W zwykłym szybkość przełączania zależy od popychacza. W migowym sprężysty mechanizm przestawia styk gwałtownie po przekroczeniu położenia progowego, nawet gdy zderzak porusza się wolno. Nie oznacza to zapamiętania stanu: po zwolnieniu popychacza łącznik wraca.
+
+## Przykład kontroli
+
+Masz żądanie lewego kierunku i aktywny prawy stycznik. NC prawego jest otwarty, więc cewka lewego nie dostanie prądu. Jeśli oba żądania pojawią się w tej samej chwili, rzeczywista odpowiedź zależy także od aparatury. Własny wariant treningowy dodatkowo blokuje oba sprzeczne żądania w dekoderze i pokazuje konflikt.
+
+## Typowy błąd i powtórka
+
+NC przeciwnego stycznika w równoległej gałęzi nie blokuje wszystkich dróg cewki. Blokada musi być wspólnym warunkiem szeregowym. Ochrona przeciążeniowa, zwarciowa i zatrzymanie awaryjne rozwiązują różne problemy.

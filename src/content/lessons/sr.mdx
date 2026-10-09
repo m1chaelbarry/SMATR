@@ -1,0 +1,39 @@
+---
+title: "Pamięć SR z dwóch NOR"
+part: ttl
+order: 11
+goal: "Wyprowadzisz wpisanie i zerowanie oraz rozpoznasz stan niedozwolony."
+sources: ["2smatr.pdf, s. 2, 6–8, rys. 8"]
+tasks: [T05, T06]
+simulator: memory
+---
+## Sprzężenie tworzy pamięć
+
+Dwa NOR są połączone krzyżowo: wyjście każdego wraca do wejścia drugiego. W stanie poprawnym wyjścia są przeciwne. Gdy S=R=0, układ ma dwa możliwe stabilne stany, więc wynik zależy od tego, co było wcześniej.
+
+| S | R | Q | Wyjście przeciwne |
+|---|---|---|---|
+| 0 | 0 | Poprzedni stan | Jego negacja |
+| 1 | 0 | 1 | 0 |
+| 0 | 1 | 0 | 1 |
+| 1 | 1 | 0 | 0 — niedozwolone |
+
+Po jednoczesnym zwolnieniu S=R=1 nie możesz przewidzieć końcowego Q bez analizy opóźnień. Prawidłowy projekt wyklucza taki przypadek. Model pokazuje wtedy „stan nieznany”; jawne S=1,R=0 albo S=0,R=1 ponownie ustala pamięć.
+
+## Fabryczne połączenia tablicy
+
+Lewy SR w UCY7402 ma S na 6, R na 2, Q na 1 i wyjście przeciwne na 4. Połączono 1→5 oraz 4→3. Prawy ma S na 12, R na 8, Q na 10 i przeciwne na 13; sprzężenie 10→11 oraz 13→9. Trzy kości w ostatniej kolumnie dają sześć SR. Te połączenia już istnieją — nie montujesz ich ponownie jako osobnego układu.
+
+## Funkcje wzbudzania
+
+Dla każdego zapamiętanego polecenia zadaj dwa pytania: kiedy S ma być 1, kiedy R ma być 1? Potem sprawdź ich iloczyn: $S\cdot R$ musi być 0 dla dopuszczalnych sygnałów. Dodanie STOP do R wymaga jednoczesnego zablokowania S podczas STOP.
+
+Przykład: $S=A\cdot\neg STOP$, $R=STOP+B$. Samo $R=STOP+B$ nie wystarczy, jeśli A i B mogą być równoczesne. Trzeba określić dopuszczalne zdarzenia i sposób przejścia do następnego stanu.
+
+## SR NOR a RS LOGO
+
+Blok RS z tabeli LOGO nie jest modelem dwóch NOR. Ma zdefiniowany priorytet resetu i przy S=R=1 daje 0. Przerzutnik impulsowy z kolei przełącza stan na kolejnych zboczach Trg. Są to trzy różne zachowania pamięci.
+
+## Typowy błąd i powtórka
+
+Przypisanie SR NOR „priorytetu R” ukrywa błąd projektowy. Wpisanie 1, zerowanie 0 i podtrzymanie mają być jednoznaczne, a wejścia 11 wykrywane przed uruchomieniem obiektu.

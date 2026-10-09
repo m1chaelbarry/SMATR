@@ -1,0 +1,9 @@
+---
+import {getCollection} from 'astro:content';
+import Book from '../../layouts/Book.astro';
+import {parts,url} from '../../lib/links';
+export function getStaticPaths(){return parts.map(part=>({params:{part:part.id},props:{part}}));}
+const {part}=Astro.props;
+const lessons=(await getCollection('lessons')).filter(l=>l.data.part===part.id).sort((a,b)=>a.data.order-b.data.order);
+---
+<Book title={part.label} active={part.id}><span class="eyebrow">Część {part.mark}</span><h1>{part.label}</h1><p class="intro">{part.description}</p><div class="track-grid">{lessons.map((l,i)=><a class="track-card" style={`--accent:${part.color}`} href={url(`${part.id}/${l.id}/`)}><span class="track-number">LEKCJA {i+1}</span><h2>{l.data.title}</h2><p>{l.data.goal}</p><span>{l.data.tasks.length} zadania</span></a>)}</div></Book>

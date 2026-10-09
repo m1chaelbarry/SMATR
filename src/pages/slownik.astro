@@ -1,0 +1,5 @@
+---
+import Book from '../layouts/Book.astro';
+import {glossary} from '../data/reference';
+---
+<Book title="Słownik oznaczeń"><p class="eyebrow">Pod ręką</p><h1>Słownik oznaczeń</h1><div class="table-scroll"><table><thead><tr><th>Oznaczenie</th><th>Znaczenie w podręczniku</th></tr></thead><tbody>{glossary.map(([term,meaning])=><tr><td><strong>{term}</strong></td><td>{meaning}</td></tr>)}</tbody></table></div></Book>

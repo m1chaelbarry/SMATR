@@ -1,0 +1,51 @@
+---
+title: "Stanowisko i napęd JBD-320"
+part: podstawa
+order: 1
+goal: "Wyjaśnisz, jak silnik, przekładnia, sprzęgła i śruba powodują ruch stołu."
+sources: ["1smatr.pdf, s. 7–9, rys. 4–8", "2smatr.pdf, s. 3–5", "3smatr.pdf, s. 2–4"]
+tasks: [P01, P02]
+---
+import Mechanism from '../../components/Mechanism.astro';
+
+## Co sterujesz na laboratorium
+
+<Mechanism />
+
+JBD-320 jest zespołem posuwowym: ruchomy stół przesuwa się po prowadnicach łoża. Silnik asynchroniczny obraca śrubę pociągową poprzez przekładnię. Obrót śruby zamienia się w przesuw stołu. Układ sterowania wydaje polecenia czterem elementom wykonawczym: kierunek lewy, kierunek prawy, sprzęgło robocze 1E i sprzęgło szybkie 2E.
+
+**Kierunek i prędkość są dwiema odrębnymi decyzjami.** Kierunek zależy od obrotów silnika; rodzaj posuwu wybiera sprzęgło. Załączenie 1E nie oznacza samo przez się ruchu w lewo.
+
+| Faza ruchu | Silnik | 1E | 2E |
+|---|---|---|---|
+| Roboczy w lewo | Lewy kierunek | 1 | 0 |
+| Szybki w lewo | Lewy kierunek | 0 | 1 |
+| Roboczy w prawo | Prawy kierunek | 1 | 0 |
+| Szybki w prawo | Prawy kierunek | 0 | 1 |
+| Postój | Wyłączony | 0 | 0 |
+
+Jedynka w tabeli oznacza polecenie załączenia. Dla ruchu potrzebujesz jednego kierunku silnika i jednego sprzęgła. Oba kierunki jednocześnie oraz oba sprzęgła jednocześnie są sprzecznymi poleceniami, które projekt ma wykluczyć.
+
+## Sprzężenie zwrotne od położenia
+
+Cztery łączniki drogowe są zamocowane do nieruchomego łoża. Zderzaki jadą ze stołem. Gdy zderzak naciska łącznik, jego styki zmieniają położenie. Ten sygnał informuje sterowanie, że osiągnięto miejsce zmiany fazy. Układ nie musi odmierzać czasu przejazdu, aby wiedzieć, gdzie zakończyć odcinek.
+
+Łańcuch przyczynowy jest następujący: **polecenie → napęd → ruch stołu → zderzak → łącznik → nowa decyzja sterowania**. To zamknięte sprzężenie zwrotne. Fizyczne położenie łączników nie jest tym samym co położenie stołu w chwili ich zadziałania — między nimi znajduje się zderzak ustawiony na listwie.
+
+## Trzy realizacje tej samej decyzji
+
+W ćwiczeniu 1 układ montujesz z aparatów w szafie. W ćwiczeniu 2 budujesz funkcje NAND i pamięć SR na tablicy TTL. W ćwiczeniu 3 wpisujesz schemat logiczny do LOGO. Każda technika musi wygenerować te same polecenia dla poprawnie zdefiniowanych faz. Wyjście TTL lub LOGO steruje cewką stycznika, a nie bezpośrednio silnikiem.
+
+Instrukcje opisują silnik zasilany 380 V AC i sprzęgła 24 V DC. Są to dane opisanego stanowiska; nie należy ich zastępować parametrami nowszego sprzętu ani traktować przeglądarkowego modelu jako dokumentacji wykonawczej instalacji.
+
+## Przykład krok po kroku
+
+Chcesz przejechać odcinek ruchem roboczym w lewo. Najpierw wybierasz lewy kierunek, następnie 1E. Stół rusza. Sygnał wybranego łącznika kończy fazę. Przed zmianą na ruch szybki wyłączasz 1E i wybierasz 2E; kierunek pozostaje lewy. Zmieniłeś prędkość, nie kierunek.
+
+## Typowy błąd
+
+„Załączę 2E, żeby wrócić” jest niepełnym poleceniem. 2E wybiera ruch szybki. Powrót wymaga również przeciwnego kierunku silnika.
+
+## Krótka powtórka
+
+Silnik wybiera kierunek, sprzęgło wybiera rodzaj ruchu, a łącznik drogowy dostarcza informację o położeniu. Przekaźniki, TTL i LOGO różnią się realizacją sterowania, nie mechaniką obiektu.

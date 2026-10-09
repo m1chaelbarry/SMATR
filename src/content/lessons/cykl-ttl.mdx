@@ -1,0 +1,51 @@
+---
+title: "Pełny cykl TTL: funkcje i połączenia"
+part: ttl
+order: 12
+goal: "Zrealizujesz pamięć faz i dekoder cyklu za pomocą dostępnych NAND i SR."
+sources: ["2smatr.pdf, s. 2, 5–8", "Cykl 100–120–100: 1smatr.pdf, s. 12", "Układ fazowy: własny przykład treningowy"]
+tasks: [T07, T08]
+---
+import CircuitTables from '../../components/CircuitTables.astro';
+import CycleDiagram from '../../components/CycleDiagram.astro';
+
+<CycleDiagram />
+
+## Pięć SR, funkcje wpisujące i zerujące
+
+K1–K4 oznaczają fazy, K5 blokadę przytrzymanego START. $B=K1+K2+K3+K4$, $Z=STOP$. Początek testu wymaga skasowania faz przez STOP przy puszczonym START. Wyjścia przeciwne SR dostarczają negacji K bez dodatkowych NAND.
+
+| SR | S — wpisanie | R — zerowanie |
+|---|---|---|
+| K1 | START · 1ŁD · ¬B · ¬Z · ¬K5 | Z + K2 |
+| K2 | K1 · 2ŁD · ¬Z | Z + K3 |
+| K3 | K2 · 3ŁD · ¬Z | Z + K4 |
+| K4 | K3 · 4ŁD · ¬Z | Z + 1ŁD |
+| K5 | START · (B + Z) | ¬START |
+
+Po wpisaniu kolejnej fazy jej Q kasuje poprzednią. Funkcje pozostają poprawne przy osobnych impulsach czujników odpowiadających geometrii cyklu. Sprzeczne sygnały, np. 1ŁD i 4ŁD jednocześnie podczas przejścia, mogą spowodować S=R=1 i są wykrywane jako błąd, nie „naprawiane” priorytetem.
+
+## Dekoder zabezpiecza przejścia
+
+$$P=K4,\quad L=(K1+K2+K3)\cdot\neg K4$$
+$$F=K2+K4,\quad W=(K1+K3)\cdot\neg F$$
+
+P i L oznaczają kierunki, F szybkie sprzęgło 2E, W robocze 1E. Prawy kierunek i szybkie sprzęgło mają pierwszeństwo w krótkim przekazaniu pamięci do następnej fazy. Dzięki temu dekoder nie wydaje dwóch przeciwstawnych poleceń, także zanim poprzedni SR zdąży się skasować. Awaryjne zezwolenie obwodów wykonawczych pozostaje nadrzędne.
+
+## Kompletny schemat jako lista sieci
+
+Poniżej każda sieć ma jeden nazwany sygnał wynikowy i jawne wejścia. „nK” pochodzi z wyjścia przeciwnego SR. Dwa powtórzone wejścia NAND oznaczają inwerter. Lista zastępuje nieczytelne krzyżowanie trzydziestu połączeń na małym ekranie: połącz wyjście danej sieci ze wszystkimi wskazanymi wejściami jej odbiorców.
+
+<CircuitTables kind="ttl" />
+
+Zestaw zawiera **30 NAND: 24 dwuwejściowe, cztery trójwejściowe i dwie czterowejściowe**. Potrzeba sześciu UCY7400, dwóch UCY7410 i jednej UCY7420: dokładnie dziewięć podstawek trzech pierwszych kolumn. Pięć SR zajmuje trzy UCY7402 w czwartej kolumnie; szósty SR pozostaje niewykorzystany. Dla każdego z pięciu SR podano S,R,Q i wyjście przeciwne. Zasilanie podstawek jest fabryczne.
+
+## Ślad uruchomienia
+
+STOP=1 kasuje K1–K4. Zwolnij STOP. START w pozycji 1ŁD wpisuje K1, a trwający cykl ustawia K5, jeśli START pozostaje wciśnięty. Zwolnienie START zeruje K5. 2ŁD wpisuje K2; kolejne iteracje sprzężenia zerują K1. Analogicznie 3ŁD daje K3, 4ŁD K4, a 1ŁD zeruje K4. Nie wpisuje K1, jeżeli nie ma nowego polecenia START.
+
+Podczas powrotu 3ŁD i 2ŁD pozostawiają K4 aktywny. Przetrzymany START jest blokowany K5 również po powrocie. Po puszczeniu można rozpocząć kolejny cykl. Na symulatorze rzeczywistego stanowiska sprawdzasz wszystkie te zdarzenia przed zamianą wtyku na obiekt.
+
+## Typowy błąd i powtórka
+
+Nie zmieniaj w ostatnim NAND wejść ujemnych na dodatnie „bo tak łatwiej połączyć”. Nazwy sieci oznaczają konkretne poziomy logiczne. Liczba bramek, nóżki, fabryczne SR i pełny ślad cyklu muszą zgadzać się jednocześnie.

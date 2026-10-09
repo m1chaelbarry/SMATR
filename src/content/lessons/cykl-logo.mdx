@@ -1,0 +1,46 @@
+---
+title: "Pełny cykl LOGO i kontrola programu"
+part: logo
+order: 16
+goal: "Prześledzisz kompletny program cyklu mieszczący się w ograniczeniach LOGO 230 RC."
+sources: ["3smatr.pdf, s. 4–10, 12–19", "Siemens LOGO! Manual 1997, rozdz. 3.1, 3.9.12, 3.10 i dodatek C", "Program: własny przykład treningowy"]
+tasks: [L07, L08]
+---
+import CircuitTables from '../../components/CircuitTables.astro';
+
+## Pamięć faz przez liczbę przejechanych granic
+
+W LOGO zastosujemy inną realizację niż pięć SR z TTL: dwa RS i trzy liczniki o progach 1,2,3. RS RUN zapamiętuje trwający cykl, RS LOCK blokuje przytrzymany START. Liczniki zliczają to samo zbocze „2ŁD lub 3ŁD lub 4ŁD”, lecz każdy ma inny Par. Dir=lo oznacza zwiększanie, wejścia R zerują wartość.
+
+| Przejechane granice | C1 | C2 | C3 | Faza |
+|---|---|---|---|---|
+| 0 | 0 | 0 | 0 | F1 |
+| 1 | 1 | 0 | 0 | F2 |
+| 2 | 1 | 1 | 0 | F3 |
+| 3 | 1 | 1 | 1 | F4 |
+
+Podczas F4 zliczanie jest blokowane przez Q2 — prawy kierunek. Powrotne naciśnięcia 3ŁD i 2ŁD nie zwiększają liczników. Zderzaki w tym modelu zwalniają jeden czujnik przed naciśnięciem następnego: OR trzech czujników musi wrócić do 0 między zboczami. Bez tego dwa przejścia dałyby tylko jedno zliczenie.
+
+## Sprzężenia przez zaciski Q
+
+Stan wyjścia Q można wybrać z Co. W tym programie Q1/Q2 służą jako informacja o ruchu z poprzedniego kroku obliczeń: Q1 lub Q2 odblokowuje zliczanie i blokadę START, Q2 z 1ŁD kończy cykl. Dzięki zaciskom Q schemat połączeń bloków B jest acykliczny. Nie tworzymy nieograniczonej rekurencji B→B.
+
+W symulatorze jeden krok programu to umowne 50 ms. Stany liczników i RS są aktualizowane raz na krok; Q użyte jako wejście pochodzi z poprzedniego kroku. Nie deklarujemy, że rzeczywisty sterownik ma dokładnie taki czas cyklu. Impulsy demonstracji są utrzymywane przez kilka kroków, a licznik nadal reaguje na jedno zbocze.
+
+## Kompletna lista bloków i wyjść
+
+<CircuitTables kind="logo" />
+
+W tabeli identyfikatory Bxx oznaczają przyjęte etykiety projektu. Panel automatycznie przydziela numery w kolejności tworzenia: wpisując od Q1 przepisz etykiety do tabeli faktycznie nadanych numerów, zachowując połączenia. To samo dotyczy ponownego wykorzystania wyniku przez BN.
+
+Program ma **28 bloków**, sześć wejść i cztery wyjścia. Najdłuższa ścieżka ma **siedem bloków**, np. Q1→B16→B17→B19→B12→B13→B15→B24. Zaciski Q są źródłami sprzężenia, a nie blokami dodawanymi do ścieżki. B11 i B14 pominięto po uproszczeniu projektu; etykiety nie oznaczają 30 użytych bloków. Dla opisanego standardowego modelu producenta dwa RS i trzy liczniki zajmują odpowiednio 5,6,8 jednostek w trzech obszarach pamięci przy limitach 27,24,10; nie korzystamy z funkcji nowszej wersji ani z remanencji.
+
+## Ślad cyklu
+
+Najpierw STOP i puszczony START inicjują RS oraz liczniki. W RUN impuls START przy I3=1 ustawia pamięć RUN. Po pojawieniu się Q1 zliczanie zostaje odblokowane. Kolejne oddzielone impulsy I4,I5,I6 zmieniają wartości liczników na 1,2,3; wyjścia dają roboczy lewo, szybki lewo, roboczy lewo, szybki prawo. Powrotne I5 i I4 nic nie zmieniają. I3 przy aktywnym Q2 zeruje RUN, po czym brak ruchu zeruje liczniki. LOCK pozostaje 1 przy trzymanym I1 i blokuje ponowny start.
+
+STOP operatora kasuje RUN i liczniki, wyjścia gasną. Po zatrzymaniu poza I3 nowy START nie spełnia warunku początku. Przejście sterownika w STOP otwiera wyjścia i zatrzymuje obliczanie. W prowadzonym modelu ponowny wybór RUN zaczyna od inicjalizacji ćwiczenia; nie symulujemy wszystkich kombinacji modułu programowego i przywracania zasilania firmware.
+
+## Typowy błąd i powtórka
+
+OR kilku czujników nie tworzy zbocza, jeśli kolejny czujnik zadziała przed zwolnieniem poprzedniego. Poza limitami bloków sprawdź przebiegi sygnałów, priorytet R, powrót i przytrzymany START. Protokół dokumentuje schemat rzeczywiście przyjęty i uruchomiony, a nie tylko tę wersję treningową.

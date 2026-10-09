@@ -1,0 +1,36 @@
+---
+title: "Cewki, styki i samopodtrzymanie"
+part: przekazniki
+order: 5
+goal: "Prześledzisz zasilanie cewki i wyjaśnisz, skąd bierze się pamięć przekaźnikowa."
+sources: ["1smatr.pdf, s. 2–3, 14–15"]
+tasks: [R01, R02]
+simulator: relays
+---
+## Cewka zmienia wszystkie swoje styki
+
+Prąd cewki wytwarza pole magnetyczne, przyciąga zworę i przełącza styki. Po zaniku prądu zwora wraca. Stycznik działa podobnie, ale jest przeznaczony do większych prądów. W instrukcji ma trzy zestyki główne dla obwodu mocy i zestyki pomocnicze sterowania.
+
+NO jest otwarty przy niepobudzonej cewce, NC zamknięty. Wszystkie styki K zmieniają się wraz z cewką K, także gdy są narysowane w odległych miejscach schematu. „Normalnie” dotyczy aparatu bez pobudzenia, nie tego, co dzieje się najczęściej podczas cyklu.
+
+## Styki realizują logikę
+
+NO w szeregu realizują AND: wszystkie muszą być zamknięte. NO równolegle realizują OR: wystarczy jedna droga. NC realizuje negację pobudzenia aparatu. Jeśli zmienna oznacza nacisk przycisku, NC przewodzi przy zmiennej 0. Jeśli zmienna oznacza już zamknięty obwód zezwolenia, nie należy negować jej ponownie.
+
+## Układ samopodtrzymania
+
+Droga zasilania: zasilanie → NC STOP → równoległe NO START i NO K → cewka K → powrót. Naciśnięcie START pobudza K. NO K zamyka się. Po puszczeniu START prąd płynie przez K. STOP otwiera wspólną drogę i zwalnia cewkę; NO K otwiera się.
+
+$$K_{n+1}=A\land(START\lor K_n)$$
+
+$A$ oznacza spełnienie warunków zezwolenia, np. zamknięty STOP i brak przeciążenia. Indeks $n$ podkreśla, że równanie zawiera poprzedni stan i opisuje pamięć, a nie wyłącznie kombinacyjną tablicę prawdy.
+
+## Przykład krok po kroku
+
+Początek: K=0, START=0, zezwolenie=1 — obie gałęzie otwarte. START=1 — cewka otrzymuje zasilanie. K=1 — zamyka własny NO. START=0 — druga gałąź podtrzymuje prąd. STOP=1 — zezwolenie znika, cewka i własny styk wracają do spoczynku.
+
+Przy zaniku napięcia cewka również zwalnia. Przy puszczonym START samo przywrócenie zasilania nie pobudza K. Jeżeli START jest stale zwarty, prosty układ może ponownie wystartować; dodatkowa blokada przytrzymanego przycisku rozwiązuje ten odrębny przypadek w wariancie pełnego cyklu.
+
+## Typowy błąd i powtórka
+
+Własny styk w szeregu z START nie podtrzyma cewki po zwolnieniu START. Musi tworzyć drogę równoległą, podczas gdy STOP i zabezpieczenia pozostają wspólne dla wszystkich gałęzi.

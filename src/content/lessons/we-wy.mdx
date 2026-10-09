@@ -1,0 +1,40 @@
+---
+title: "LOGO 230 RC: wejścia i ograniczenia"
+part: logo
+order: 13
+goal: "Przypiszesz sygnały do sześciu wejść i czterech wyjść starszego sterownika."
+sources: ["3smatr.pdf, s. 5, 7–11", "Siemens LOGO! Manual 1997, rozdz. 3.1 i 3.10"]
+tasks: [L01, L02]
+---
+## Uczysz się konkretnej wersji
+
+Instrukcja opisuje LOGO 230 RC z sześcioma wejściami, czterema przekaźnikowymi wyjściami, limitem 30 bloków i najwyżej siedmioma blokami szeregowymi między zaciskiem wejściowym i wyjściem. Parametrów współczesnych LOGO nie przenosimy do tego ćwiczenia.
+
+Źródło podaje zasilanie 220 V AC, progi wejść: 0 poniżej 40 V, 1 powyżej 79 V i utrzymanie poziomu co najmniej 50 ms. Pomiędzy progami nie ma określonej wartości logicznej. W tekście instrukcji występuje litera J, podczas gdy zaciski i dokumentacja producenta stosują I; podręcznik używa **I1–I6**, a J1–J6 traktuje jako oznaczenia tych samych wejść w tekście laboratorium.
+
+## Przydział podstawowego programu
+
+| Wejście | Sygnał | Wyjście | Polecenie |
+|---|---|---|---|
+| I1 | START | Q1 | Lewy kierunek |
+| I2 | STOP operatora | Q2 | Prawy kierunek |
+| I3 | 1ŁD — początek | Q3 | 1E — ruch roboczy |
+| I4 | 2ŁD | Q4 | 2E — ruch szybki |
+| I5 | 3ŁD | | |
+| I6 | 4ŁD | | |
+
+To przydział własnego projektu. Awaryjny STOP działa nadrzędnie w obwodach stanowiska i nie jest siódmym programowym wejściem. Wyjścia prowadzą do cewek styczników, nie wprost do silnika.
+
+## Co, GF, SF i numery bloków
+
+Co wybiera zaciski: I, Q, hi=1, lo=0, x=jawnie niepodłączone. GF zawiera podstawowe funkcje, SF specjalne. Wynik bloku można wykorzystać wielokrotnie przez jego numer Bxx. Jeden blok z trzema odbiorcami liczy się raz, a nie trzy razy.
+
+Nieużywane x ma neutralne znaczenie zależne od funkcji: dla AND/NAND odpowiada 1, dla OR/NOR 0. Znak ? oznacza brak wyboru i niekompletny program. Dla nauki można jawnie stosować hi lub lo, unikając pomylenia x z ?.
+
+## Przykład czterech bloków
+
+Funkcja $y=\neg a\,b+a\,c$ ma B01 OR, B02 AND( B03,b ), B03 NOT(a), B04 AND(a,c), a Q1 otrzymuje B01. AND/OR mają trzy wejścia: pozostałe uzupełnij hi lub lo. Najdłuższa ścieżka NOT→AND→OR ma trzy bloki, całość cztery.
+
+## Typowy błąd i powtórka
+
+START, STOP, WYCOFANIE i cztery łączniki to siedem sygnałów, nie sześć. Kontroluj również długość każdej gałęzi, nie tylko liczbę bloków. Producent opisuje dodatkowo zużycie obszarów pamięci przez SF; sam limit 30 nie zastępuje kontroli, czy urządzenie przyjmie program.

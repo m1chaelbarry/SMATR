@@ -1,0 +1,33 @@
+---
+title: "START, STOP i bezpieczne wznowienie"
+part: podstawa
+order: 4
+goal: "Rozróżnisz sygnały operatora, zatrzymanie nadrzędne i pauzę modelu."
+sources: ["1smatr.pdf, s. 6, 9", "2smatr.pdf, s. 4", "3smatr.pdf, s. 3, 8, 11"]
+tasks: [P07, P08]
+---
+## Co rzeczywiście określa instrukcja
+
+Pulpit ma START, STOP, WYCOFANIE oraz nadrzędny awaryjny STOP. Instrukcje pozwalają wykorzystać przyciski operatora w projektowanym układzie, lecz nie definiują jednej uniwersalnej procedury wznowienia. To część założeń projektu. Awaryjny STOP ma wyłączyć wszystkie ruchy.
+
+Stan STOP sterownika LOGO oznacza niewykonywanie programu i otwarte wyjścia. Programowanie odbywa się w STOP, parametryzacja w RUN. Start w menu LOGO rozpoczyna wykonywanie programu, a START na pulpicie jest sygnałem, który ten program dopiero interpretuje.
+
+## Jawne założenia własnego wariantu
+
+Wspólny wariant treningowy uruchamia cykl tylko z pozycji potwierdzonej przez 1ŁD. Zwykły STOP kończy cykl, kasuje fazy i wyłącza wyjścia. Nie przenosi stołu do początku. Zwolnienie STOP nie uruchamia ponownie ruchu. Przytrzymany START nie rozpoczyna kolejnego cyklu: dodatkowa pamięć blokuje ponowne wykorzystanie przycisku do czasu jego zwolnienia.
+
+W symulatorze **Reset ćwiczenia** przywraca położenie początkowe i stan pamięci. Jest operacją modelu, nie dodatkowym przyciskiem rzeczywistego stanowiska. **Pauza** zamraża czas, nie kasuje fazy i nie udaje STOP.
+
+Awaryjny STOP w modelu natychmiast odłącza polecenia ruchu i kończy treningowy cykl. Zależności elektryczne rzeczywistego obwodu awaryjnego są nadrzędne wobec programu i należy analizować je w dokumentacji stanowiska.
+
+## WYCOFANIE i liczba wejść
+
+Sześć wejść LOGO wystarcza na START, STOP i cztery łączniki. Osobne WYCOFANIE byłoby siódmym sygnałem. Podstawowy program go nie zawiera. Zadanie o WYCOFANIU polega na rozpoznaniu tej granicy i zmianie wymagań, a nie na dopisaniu nieistniejącego wejścia.
+
+## Przykład
+
+STOP podczas F2 na $x=-150$ mm zostawia stół w tym miejscu i wszystkie wyjścia 0. 1ŁD nie jest aktywny, więc następny START zostaje odrzucony. Powrót wymaga osobnej procedury. W ćwiczeniu przeglądarkowym wybierasz Reset ćwiczenia.
+
+## Typowy błąd i powtórka
+
+Nie utożsamiaj „program jest RUN” z „maszyna ma jechać”. RUN może obliczać same zera. Nie utożsamiaj również pauzy demonstracji z fizycznym zatrzymaniem napędu. Każdy przycisk musi mieć jawnie opisane skutki dla wyjść, pamięci i położenia.

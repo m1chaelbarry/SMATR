@@ -1,0 +1,48 @@
+---
+title: "Bramki i algebra Boole’a"
+part: ttl
+order: 9
+goal: "Zastosujesz funkcje logiczne i prawa upraszczania zamiast zgadywać połączenia."
+sources: ["2smatr.pdf, s. 6, 10–12", "1smatr.pdf, s. 14–17"]
+tasks: [T01, T02]
+---
+## Dwie wartości i jednoznaczne zmienne
+
+Zmienna ma wartość 0 albo 1. Najpierw ustal, czy 1 oznacza naciśnięcie przycisku, zamknięty obwód czy pobudzenie cewki. Zapis „+” oznacza OR, iloczyn AND, kreska lub $\neg$ negację. Nie są to zwykłe działania arytmetyczne: $1+1=1$ w algebrze Boole’a.
+
+| a | b | AND | OR | XOR | NAND | NOR |
+|---|---|---|---|---|---|---|
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 |
+| 0 | 1 | 0 | 1 | 1 | 1 | 0 |
+| 1 | 0 | 0 | 1 | 1 | 1 | 0 |
+| 1 | 1 | 1 | 1 | 0 | 0 | 0 |
+
+NOT odwraca pojedyncze wejście. XOR oznacza dokładnie jedno z dwóch wejść, nie dowolną liczbę jedynek. NAND daje negację AND, NOR negację OR.
+
+## Prawa stosowane w projektowaniu
+
+$$a+0=a,\quad a\cdot1=a,\quad a+a=a,\quad a\cdot a=a$$
+$$a+\neg a=1,\quad a\cdot\neg a=0,\quad a+ab=a$$
+$$\neg(ab)=\neg a+\neg b,\qquad\neg(a+b)=\neg a\cdot\neg b$$
+
+Ostatnie dwa to prawa de Morgana. Negowanie nawiasu zmienia AND w OR i neguje każdy argument. „Sklejanie” łączy składniki różniące się jedną zmienną: $ab\neg c+abc=ab$.
+
+## Synteza z tablicy prawdy
+
+Przykład z instrukcji ma jedynki w wierszach 2,3,5,7, numerując od 000. Każdy taki wiersz daje minterm: argument równy 0 zapisujesz zanegowany, równy 1 bez negacji.
+
+$$y=\neg a\,b\,\neg c+\neg a\,b\,c+a\,\neg b\,c+a\,b\,c=\neg a\,b+a\,c.$$
+
+Postać iloczynu sum tworzy się z wierszy zerowych. W sumie argument równy 0 występuje bez negacji, równy 1 zanegowany:
+
+$$y=(a+b+c)(a+b+\neg c)(\neg a+b+c)(\neg a+\neg b+c).$$
+
+Zera to **0,1,4,6**. Na s. 12 lista zawiera literówkę „1,2,4,6”, mimo poprawnego wzoru. Odczyt wszystkich ośmiu wierszy rozstrzyga błąd.
+
+## Przykład kontroli i typowy błąd
+
+Przy $a=0$ uproszczona funkcja daje $y=b$, przy $a=1$ daje $y=c$. To pozwala szybko sprawdzić tabelę. Częsty błąd polega na zastosowaniu reguły mintermu do maksymalnego składnika sumy; wtedy iloczyn sum opisuje inną funkcję. Równoważność sprawdzaj dla wszystkich kombinacji.
+
+## Krótka powtórka
+
+Tablica określa funkcję. Postacie kanoniczne są sposobami jej zapisu. Upraszczanie zmienia liczbę elementów, lecz musi zachować wszystkie wartości wyjścia.

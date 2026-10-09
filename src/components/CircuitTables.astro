@@ -1,0 +1,12 @@
+---
+import {ttlWiring,latchWiring,logoBlocks,logoOutputs} from '../data/circuits';
+const {kind}=Astro.props;
+---
+{kind==='ttl' ? <>
+  <div class="table-scroll"><table><caption>NAND — każde przypisanie wejścia oznacza przewód do podanej nóżki.</caption><thead><tr><th>Wynik</th><th>Kość</th><th>Wejścia: sygnał → nóżka</th><th>Wyjście</th></tr></thead><tbody>{ttlWiring.map(g=><tr><td>{g.name}</td><td>{g.chip} {g.type}</td><td>{g.inputs.map((v,i)=>`${v} → ${g.pins[i]}`).join('; ')}</td><td>{g.output}</td></tr>)}</tbody></table></div>
+  <div class="table-scroll"><table><caption>SR — UCY7402. Q oraz ¬Q mają sprzężenia wykonane na tablicy.</caption><thead><tr><th>Pamięć</th><th>Kość</th><th>S → nóżka</th><th>R → nóżka</th><th>Q / ¬Q</th></tr></thead><tbody>{latchWiring.map(g=><tr><td>{g.name}</td><td>{g.chip}</td><td>{g.set} → {g.s}</td><td>{g.reset} → {g.r}</td><td>{g.q} / {g.nq}</td></tr>)}</tbody></table></div>
+  <p>Wyjścia: L → 1S, K4 → 2S, W → 3S, F → 4S poprzez część wykonawczą stanowiska. Każdy sygnał w tabeli jest albo wejściem z przycisku/łącznika, albo wyjściem wskazanej bramki/pamięci. Zasilanie wszystkich kości: 14 = VCC, 7 = GND. Nie łącz wyjścia TTL z napięciem sieciowym. Niewykorzystane bramki U8 i połowa SR U12 pozostają poza funkcją projektu.</p>
+</> : <>
+  <div class="table-scroll"><table><caption>Lista połączeń LOGO. COUNTER: R, Cnt, Dir, Par; RS: S, R. GF mają trzy wejścia, oprócz NOT.</caption><thead><tr><th>Blok</th><th>Funkcja</th><th>Połączenia</th><th>Rola</th></tr></thead><tbody>{logoBlocks.map(b=><tr><td>{b.id}</td><td>{b.type}{b.par!==undefined?` Par=${b.par}`:''}</td><td>{b.inputs.join(', ')}</td><td>{b.purpose}</td></tr>)}</tbody></table></div>
+  <p>Wyjścia: {Object.entries(logoOutputs).map(([q,b])=>`${q} ← ${b}`).join('; ')}. Przypisanie wejść: I1 START, I2 STOP, I3 1ŁD, I4 2ŁD, I5 3ŁD, I6 4ŁD. hi=1, lo=0. Nie zostawiamy żadnego znaku „?”.</p>
+</>}

@@ -1,0 +1,6 @@
+---
+import Book from '../layouts/Book.astro';
+import {requirements} from '../data/reference';
+import {url} from '../lib/links';
+---
+<Book title="Mapa wymagań" wide><p class="eyebrow">Kontrola kompletności</p><h1>Od instrukcji do zadania</h1><p>Numery 1, 2, 3 w kolumnie źródła oznaczają odpowiednio 1smatr.pdf, 2smatr.pdf, 3smatr.pdf. Mapa obejmuje wymagania dydaktyczne i czynności przygotowania; własne warianty są przykładami ich realizacji.</p><div class="table-scroll"><table><thead><tr><th>ID / wymaganie</th><th>Instrukcja</th><th>Lekcja</th><th>Przykład</th><th>Zadanie</th><th>Sprawdzenie</th></tr></thead><tbody>{requirements.map(([id,requirement,source,lesson,example,task,check])=><tr><td><strong>{id}</strong> {requirement}</td><td>{source}</td><td><a href={url(`${lesson}/`)}>{lesson}</a></td><td>{example}</td><td>{task}</td><td>{check}</td></tr>)}</tbody></table></div></Book>
