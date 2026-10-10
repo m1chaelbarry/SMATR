@@ -22,7 +22,7 @@ Task 5: complete — bramki/NAND: Vitest 5/5 RED→GREEN, Playwright 1/1. Wszyst
 
 Task 6: complete — pamięć SR/RS: Vitest 4/4 RED→GREEN, Playwright 1/1. Podtrzymanie, 11, równoczesne i kolejne zwolnienie, nieznany stan i priorytet R LOGO.
 
-Task 7: complete — LOGO: Vitest 8/8 RED→GREEN, łącznie 29/29; Playwright panel/cykl/STOP 1/1. Walidator: 28 bloków, ścieżka 7, pamięć 5/6/8; wykrywa ?, I7, pętle, 31 bloków i ścieżkę 8. SF: TON, TOF, generator, impulsowy, załączenie z pamięcią, licznik; RS porównany w module pamięci; zegar na przykładzie pn–pt.
+Task 7: complete — LOGO: Vitest 8/8 RED→GREEN, łącznie 29/29; Playwright panel/cykl/STOP 1/1. Walidator: 28 bloków, ścieżka 7, pamięć 6/8/0; wykrywa ?, I7, pętle, 31 bloków i ścieżkę 8. SF: TON, TOF, generator, impulsowy, załączenie z pamięcią, licznik; RS porównany w module pamięci; zegar na przykładzie pn–pt.
 
 Task 8: in progress — 11 testów UI; pierwsza seria 10/11, jedyny błąd w oczekiwanej wielkości litery tytułu w teście. Poprawiony test bez JS/wydruku 1/1. Widok desktop/telefon i dialog schematu obejrzane. Cache Vite rozdzielony między dev i build, aby kontrole nie nadpisywały runtime podglądu. Przygotowano workflow z kontrolami i publikacją wyłącznie na późniejsze ręczne wywołanie.
 

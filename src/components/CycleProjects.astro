@@ -1,0 +1,23 @@
+---
+import {cycleProjects} from '../data/projects';
+import {bumperGeometry} from '../models/bumpers';
+const {expanded=false}=Astro.props;
+---
+<section class="cycle-projects"><h2>Samodzielne projekty: od cyklu do schematu</h2><p>Trzy własne zadania treningowe. Najpierw zapisz projekt na kartce; otwórz rozwiązanie dopiero po narysowaniu schematu. Stół startuje w x=0 i pokonuje trzy odcinki w lewo, następnie wraca do początku. Łączniki: a=0,55,110,165 mm. W = posuw roboczy (1E), F = szybki (2E). STOP kasuje fazy; start wymaga 1ŁD i zwolnienia poprzednio przytrzymanego START.</p>
+{cycleProjects.map((p,index)=>{
+  const g=bumperGeometry(p.lengths,-1),fast=p.speeds.flatMap((v,i)=>v==='F'?[`K${i+1}`]:[]).join(' + '),work=p.speeds.flatMap((v,i)=>v==='W'?[`K${i+1}`]:[]).join(' + ');
+  return <section class="exercise project" id={p.id}><h3>{index+1}. {p.title}</h3><p>Odcinki w lewo: <strong>{p.lengths.join('–')} mm</strong>. Prędkości F1–F4: <strong>{p.speeds.join(' → ')}</strong>. Długość powrotu wyznacz sam.</p>
+    <ol><li>Rozpisz x początku/końca, L/P, 1E/2E i czujnik kończący każdą fazę.</li><li>Oblicz zderzaki z = a − x i trzy odstępy. Sprawdź x + z = a.</li><li>Przydziel pamięci i zapisz funkcje S/R, blokadę trzymanego START oraz dekoder wyjść.</li><li>Narysuj schemat przekaźnikowy albo NAND/SR. Oznacz sieci lub bramki; sprawdź cykl, powrót przez 3ŁD/2ŁD, STOP i ponowny START.</li></ol>
+    <details open={expanded}><summary>Podpowiedź projektowa</summary><p>Zmiana długości wymaga nowych zderzaków. Zmiana prędkości wymaga nowego dekodera, nawet jeżeli pamięci faz i warunki przejść pozostają te same. Dwie sąsiednie fazy z tymi samymi wyjściami nadal mają różne czujniki kończące.</p></details>
+    <details class="solution" open={expanded}><summary>Sprawdź kompletny projekt</summary><div class="answer">
+      <div class="table-scroll"><table><caption>Fazy projektu {index+1}</caption><thead><tr><th>Faza</th><th>x [mm]</th><th>L</th><th>P</th><th>1E</th><th>2E</th><th>Koniec</th></tr></thead><tbody>{p.speeds.map((speed,i)=><tr><td>F{i+1}</td><td>{i===3?`${g.table[3]} → 0`:`${g.table[i]} → ${g.table[i+1]}`}</td><td>{Number(i<3)}</td><td>{Number(i===3)}</td><td>{Number(speed==='W')}</td><td>{Number(speed==='F')}</td><td>{i===3?'1ŁD':`${i+2}ŁD`}</td></tr>)}</tbody></table></div>
+      <p>Zderzaki: <strong>{g.bumpers.join(', ')} mm</strong>; odstępy: <strong>{g.spacing.join(', ')} mm</strong>. Powrót: {Math.abs(g.table[3])} mm. Sprawdzenie kontaktów: {g.table.map((x,i)=>`${x}+${g.bumpers[i]}=${i*55}`).join('; ')}.</p>
+      <p>K1–K4 przechowują F1–F4; K5 blokuje powtórzenie START. B = K1 + K2 + K3 + K4; Z = STOP. Funkcje pamięci nie zależą od prędkości:</p>
+      <div class="table-scroll"><table><thead><tr><th>SR</th><th>S</th><th>R</th></tr></thead><tbody>{[['K1','START·1ŁD·¬B·¬Z·¬K5','Z+K2'],['K2','K1·2ŁD·¬Z','Z+K3'],['K3','K2·3ŁD·¬Z','Z+K4'],['K4','K3·4ŁD·¬Z','Z+1ŁD'],['K5','START·(B+Z)','¬START']].map(row=><tr>{row.map(value=><td>{value}</td>)}</tr>)}</tbody></table></div>
+      <p><strong>Dekoder tego projektu:</strong> P = K4; L = (K1 + K2 + K3)·¬K4; 2E = {fast}; 1E = ({work})·¬2E. Blokada ¬2E zapobiega jednoczesnym sprzęgłom przy nakładaniu faz.</p>
+      <p><strong>Przekaźniki:</strong> dla K1–K4 użyj gałęzi S równolegle z własnym NO K, za szeregowymi stykami NC składników R. Dla K5: START·(K5+B+Z). Dekoder wykonaj NO równolegle dla sum, NC w szeregu dla negacji. STOP w szeregu z wyjściami. Rozpisz każdy użyty styk i jego sieci przed montażem.</p>
+      <p><strong>NAND/SR:</strong> podaj powyższe S/R na aktywne wysokim poziomem wejścia SR z NOR. Iloczyn A·B otrzymasz jako NAND(NAND(A,B),NAND(A,B)); sumę A+B jako NAND(¬A,¬B). Dłuższe sumy i iloczyny rozłóż zgodnie z dostępnymi bramkami. Użyj przeciwnych wyjść SR jako ¬K. Lista NAND z cyklu podstawowego obsługuje te same S/R; zmień gałęzie dekodera 1E/2E zgodnie z nowymi równaniami.</p>
+      <p><strong>Ślad kontrolny:</strong> po START: {p.speeds.map((s,i)=>`F${i+1}=${i===3?'P':'L'}/${s==='W'?'1E':'2E'}`).join(' → ')} → postój po 1ŁD. Na powrocie 3ŁD i 2ŁD nie zmieniają K4. STOP gasi wyjścia i kasuje K1–K4; puszczenie STOP nie uruchamia ruchu. Trzymany START pozostawia K5=1. W TTL sprzeczne czujniki mogą dać zabronione S=R=1.</p>
+      <p>To rozwiązanie funkcjonalne do porównania własnego rysunku. Schemat montażowy, dostępność styków/nóżek oraz limity konkretnego programu LOGO sprawdź dla swojego projektu; gotowy dekoder LOGO 100–120–100 nie obsługuje automatycznie innych prędkości.</p>
+    </div></details></section>;
+})}</section>

@@ -33,7 +33,7 @@ W symulatorze jeden krok programu to umowne 50 ms. Stany liczników i RS są akt
 
 W tabeli identyfikatory Bxx oznaczają przyjęte etykiety projektu. Panel automatycznie przydziela numery w kolejności tworzenia: wpisując od Q1 przepisz etykiety do tabeli faktycznie nadanych numerów, zachowując połączenia. To samo dotyczy ponownego wykorzystania wyniku przez BN.
 
-Program ma **28 bloków**, sześć wejść i cztery wyjścia. Najdłuższa ścieżka ma **siedem bloków**, np. Q1→B16→B17→B19→B12→B13→B15→B24. Zaciski Q są źródłami sprzężenia, a nie blokami dodawanymi do ścieżki. B11 i B14 pominięto po uproszczeniu projektu; etykiety nie oznaczają 30 użytych bloków. Dla opisanego standardowego modelu producenta dwa RS i trzy liczniki zajmują odpowiednio 5,6,8 jednostek w trzech obszarach pamięci przy limitach 27,24,10; nie korzystamy z funkcji nowszej wersji ani z remanencji.
+Program ma **28 bloków**, sześć wejść i cztery wyjścia. Najdłuższa ścieżka ma **siedem bloków**, np. Q1→B16→B17→B19→B12→B13→B15→B24. Zaciski Q są źródłami sprzężenia, a nie blokami dodawanymi do ścieżki. B11 i B14 pominięto po uproszczeniu projektu; etykiety nie oznaczają 30 użytych bloków. Dla opisanego standardowego modelu producenta dwa RS i trzy liczniki zajmują **6/8/0** jednostek w trzech obszarach pamięci przy limitach 27/24/10. Według Siemens LOGO! Manual 1997, s. 163, RS kosztuje 0/1/0, a licznik 2/2/0: 2·(0,1,0)+3·(2,2,0)=(6,8,0); nie korzystamy z funkcji nowszej wersji ani z remanencji.
 
 ## Ślad cyklu
 

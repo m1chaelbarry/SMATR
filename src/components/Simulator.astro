@@ -5,6 +5,7 @@ import Relays from './sim/Relays';
 import Gates from './sim/Gates';
 import Memory from './sim/Memory';
 import Logo from './sim/Logo';
+import TTL from './sim/TTL';
 const {kind}=Astro.props;
 ---
 {kind==='cycle'&&<Cycle client:visible/>}
@@ -13,3 +14,5 @@ const {kind}=Astro.props;
 {kind==='gates'&&<Gates client:visible/>}
 {kind==='memory'&&<Memory client:visible/>}
 {kind==='logo'&&<Logo client:visible/>}
+
+{kind==='ttl'&&<TTL client:visible/>}

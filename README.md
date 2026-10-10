@@ -1,6 +1,6 @@
-# SMATR — podręcznik i sześć prowadzonych symulatorów
+# SMATR — podręcznik i siedem prowadzonych symulatorów
 
-Polskie materiały do laboratoriów JBD-320: 16 lekcji MDX, 32 zadania z rozwiązaniami, mapa wymagań oraz rejestr korekt. Astro generuje osobne strony HTML, React uruchamia tylko symulator w danej lekcji. Wzory: KaTeX; schematy: SVG. Treść i rozwiązania są dostępne bez JavaScript. Cały podręcznik można wydrukować ze strony `/druk/`.
+Polskie materiały do laboratoriów JBD-320: 16 lekcji MDX, 32 zadania z rozwiązaniami i 3 samodzielne projekty innych cykli, mapa wymagań oraz rejestr korekt. Astro generuje osobne strony HTML, React uruchamia tylko symulator w danej lekcji. Wzory: KaTeX; schematy: SVG. Treść i rozwiązania są dostępne bez JavaScript. Cały podręcznik można wydrukować ze strony `/druk/`.
 
 ## Uruchomienie
 
