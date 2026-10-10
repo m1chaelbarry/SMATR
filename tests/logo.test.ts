@@ -2,7 +2,7 @@ import {it,expect} from 'vitest';
 import {logoBlocks,logoOutputs,type LogoBlock} from '../src/data/circuits';
 import {initialLogo,logoScan,validateProgram,initialSF,specialStep,clockExample,panelAction,initialPanel} from '../src/models/logo';
 it('własny program spełnia wszystkie ograniczenia starego LOGO',()=>{
-  const v=validateProgram(logoBlocks,logoOutputs);expect(v).toEqual({count:28,depth:7,memory:[5,6,8],errors:[]});
+  const v=validateProgram(logoBlocks,logoOutputs);expect(v).toEqual({count:28,depth:7,memory:[6,8,0],errors:[]});
 });
 it('walidator wykrywa brak połączenia, nadmiar bloków, ścieżkę 8 i cykl',()=>{
   const long:LogoBlock[]=Array.from({length:8},(_,i)=>({id:`B${i+1}`,type:'NOT',inputs:[i?`B${i}`:'I1'],purpose:'test'}));
@@ -52,4 +52,13 @@ it('czasowy przykład pn–pt 08:00–13:00 i panel blokujący ?',()=>{
   let p=initialPanel();expect(panelAction(p,'run').run).toBe(false);
   for(let i=0;i<7;i++)p=panelAction(p,'next');expect(p.hole).toBe(true);expect(panelAction(p,'run').run).toBe(false);
   p=panelAction(p,'repair');p=panelAction(p,'next');p=panelAction(p,'run');expect(p.run).toBe(true);expect(panelAction(p,'stop').run).toBe(false);
+});
+
+it('koszty RS i licznika zgadzają się z tabelą Siemens, s. 163',()=>{
+  const rs:LogoBlock={id:'B1',type:'RS',inputs:['I1','I2'],purpose:'test'};
+  const counter:LogoBlock={id:'B2',type:'COUNTER',inputs:['I1','I2','lo'],par:1,purpose:'test'};
+  expect(validateProgram([rs],{Q1:'B1'}).memory).toEqual([0,1,0]);
+  expect(validateProgram([counter],{Q1:'B2'}).memory).toEqual([2,2,0]);
+  const counters=Array.from({length:13},(_,i)=>({...counter,id:`B${i+1}`}));
+  expect(validateProgram(counters,{Q1:'B1'}).errors).toContain('Przekroczono pamięć 27/24/10');
 });

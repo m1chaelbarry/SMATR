@@ -7,7 +7,7 @@ test('nawigacja i wszystkie odnośniki lokalne mają bazę oraz istnieją',async
   const urls=await page.locator('a[href]').evaluateAll(nodes=>[...new Set(nodes.map(n=>(n as HTMLAnchorElement).href))]);
   const base=new URL(baseURL!);const internal=urls.filter(link=>new URL(link).origin===base.origin&&!link.includes('#'));
   for(const link of internal){expect(new URL(link).pathname.startsWith(base.pathname)).toBe(true);expect((await request.get(link)).status(),link).toBe(200);}
-  await page.getByRole('link',{name:'Trening',exact:true}).click();await expect(page.locator('.exercise')).toHaveCount(32);
+  await page.getByRole('link',{name:'Trening',exact:true}).click();await expect(page.locator('.exercise')).toHaveCount(35);
   await page.locator('.exercise').first().getByText('Rozwiązanie i uzasadnienie', {exact:true}).click();await expect(page.locator('.exercise').first().locator('.answer')).toBeVisible();expect(errors).toEqual([]);
 });
 test('telefon, powiększenie schematu i klawiatura',async({page})=>{
@@ -28,11 +28,11 @@ test('treść działa bez JavaScript; wydruk otwiera wszystkie rozwiązania',asy
   const context=await browser.newContext({javaScriptEnabled:false,baseURL:test.info().project.use.baseURL});const staticPage=await context.newPage();await staticPage.goto('ttl/algebra/');
   await expect(staticPage.locator('h1')).toContainText('algebra');await expect(staticPage.locator('.katex')).not.toHaveCount(0);await staticPage.locator('.exercise').first().getByText('Rozwiązanie i uzasadnienie',{exact:true}).click();await expect(staticPage.locator('.answer').first()).toBeVisible();
   await staticPage.goto('druk/');await staticPage.emulateMedia({media:'print'});
-  await expect(staticPage.locator('.answer')).toHaveCount(32);
+  await expect(staticPage.locator('.answer')).toHaveCount(35);
   for(const answer of await staticPage.locator('.answer').all())await expect(answer).toBeVisible();
   for(const hint of await staticPage.locator('.exercise details>p').all())await expect(hint).toBeVisible();
   await context.close();
-  await page.goto('druk/');await expect(page.locator('.print-lesson')).toHaveCount(16);await expect(page.locator('.exercise')).toHaveCount(32);
+  await page.goto('druk/');await expect(page.locator('.print-lesson')).toHaveCount(16);await expect(page.locator('.exercise')).toHaveCount(35);
   await page.emulateMedia({media:'print'});await page.evaluate(()=>window.dispatchEvent(new Event('beforeprint')));await expect(page.locator('.answer').last()).toBeVisible();await expect(page.locator('.topbar')).not.toBeVisible();
   await mkdir('.cache/qa',{recursive:true});await page.pdf({path:'.cache/qa/print-check.pdf',format:'A4',printBackground:true});
 });

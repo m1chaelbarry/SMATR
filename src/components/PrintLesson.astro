@@ -1,0 +1,6 @@
+---
+import {namespaceIds} from '../lib/print';
+const {prefix}=Astro.props;
+const html=namespaceIds(await Astro.slots.render('default'),`print-${prefix}`);
+---
+<article class="prose print-lesson" set:html={html}/>

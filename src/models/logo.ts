@@ -35,8 +35,9 @@ export function validateProgram(blocks:LogoBlock[],outputs:Record<string,string>
     for(const input of b.inputs)if(!terminal(input)&&!map.has(input))errors.push(`${b.id}: nieuzupełnione lub nieznane połączenie ${input||'?'}`);
     if(b.type==='COUNTER'){
       if(!Number.isInteger(b.par)||b.par!<0||b.par!>9999)errors.push(`${b.id}: Par 0–9999`);
-      memory[0]++;memory[1]+=2;memory[2]+=2;
-    }else if(b.type==='RS'){memory[0]++;memory[2]++;}
+      // Siemens LOGO! Manual 1997, s. 163: licznik 2/2/0.
+      memory[0]+=2;memory[1]+=2;
+    }else if(b.type==='RS'){memory[1]++;} // RS: 0/1/0.
   }
   const depthOf=(id:string,path:string[]=[]):number=>{
     if(terminal(id)||!map.has(id))return 0;

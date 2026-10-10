@@ -25,7 +25,10 @@ async function verify(raw,from,isCSS=false){
     if(!ids.includes(decodeURIComponent(url.hash.slice(1))))errors.push(`${path}: brak kotwicy ${raw}`);
   }
 }
-for(const file of pages){for(const match of (await html(file)).matchAll(/\b(?:href|src)=["']([^"']+)["']/g))await verify(match[1],file);}
+for(const file of pages){
+  const ids=[...(await html(file)).matchAll(/\sid=["']([^"']+)["']/g)].map(m=>decode(m[1]));
+  if(new Set(ids).size!==ids.length)errors.push(`${relative(root,file)}: powtórzone identyfikatory HTML/SVG`);
+  for(const match of (await html(file)).matchAll(/\b(?:href|src)=["']([^"']+)["']/g))await verify(match[1],file);}
 for(const file of all.filter(file=>extname(file)==='.css')){const css=await readFile(file,'utf8');for(const match of css.matchAll(/url\(\s*["']?([^\s"')]+)["']?\s*\)/g))await verify(match[1],file,true);}
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`Budowa: ${pages.length} stron HTML, ${references} lokalnych odnośników/zasobów i kotwic — OK, baza ${base}.`);

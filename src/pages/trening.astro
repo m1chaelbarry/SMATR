@@ -1,8 +1,9 @@
 ---
 import Book from '../layouts/Book.astro';
 import Tasks from '../components/Tasks.astro';
+import CycleProjects from '../components/CycleProjects.astro';
 import {parts} from '../lib/links';
 import {tasks} from '../data/tasks';
 import {url} from '../lib/links';
 ---
-<Book title="Trening — 32 zadania" active="trening"><p class="eyebrow">Od przypomnienia do projektu</p><h1>Trening</h1><p>Rozwiąż zadanie przed otwarciem podpowiedzi. Każde rozwiązanie zawiera wynik i uzasadnienie. Litery P, R, T, L oznaczają podstawy, przekaźniki, TTL i LOGO.</p><h2>Sześć prowadzonych symulatorów</h2><ol>{[['podstawa/cykl','Stanowisko i cykl'],['podstawa/zderzaki','Zderzaki'],['przekazniki/styki','Przekaźniki'],['ttl/nand','Bramki i NAND'],['ttl/sr','Pamięć SR/RS'],['logo/panel-logo','LOGO: panel, cykl i parametry']].map(([path,label])=><li><a href={url(`${path}/#symulator`)}>{label}</a></li>)}</ol>{parts.map((p,i)=><section><h2>{p.label} — osiem zadań</h2><Tasks ids={tasks.slice(i*8,i*8+8).map(t=>t.id)}/></section>)}</Book>
+<Book title="Trening — 32 zadania i 3 projekty" active="trening"><p class="eyebrow">Od przypomnienia do projektu</p><h1>Trening</h1><p>Rozwiąż zadanie przed otwarciem podpowiedzi. Każde rozwiązanie zawiera wynik i uzasadnienie. Litery P, R, T, L oznaczają podstawy, przekaźniki, TTL i LOGO.</p><h2>Siedem prowadzonych symulatorów</h2><ol>{[['podstawa/cykl','Stanowisko i cykl'],['podstawa/zderzaki','Zderzaki'],['przekazniki/styki','Przekaźniki'],['ttl/nand','Bramki i NAND'],['ttl/sr','Pamięć SR/RS'],['ttl/cykl-ttl','Pełny cykl TTL'],['logo/panel-logo','LOGO: panel, cykl i parametry']].map(([path,label])=><li><a href={url(`${path}/#symulator`)}>{label}</a></li>)}</ol>{parts.map((p,i)=><section><h2>{p.label} — osiem zadań</h2><Tasks ids={tasks.slice(i*8,i*8+8).map(t=>t.id)}/></section>)}<CycleProjects/></Book>
